@@ -16,7 +16,7 @@ const questionSchema = new Schema(
     tipoPregunta: typeQuestion.simple,
     codigo: String,
     peso: Number,
-    subPregunta: [
+    subPreguntas: [
       {
         type: Schema.Types.ObjectId,
         ref: "Question",
