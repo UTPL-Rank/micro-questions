@@ -66,5 +66,4 @@ exports.question_create_post = async (req, res) => {
       message: message + error,
     });
   }
-  res.send("NOT IMPLEMENTED: Creat Question");
 };
