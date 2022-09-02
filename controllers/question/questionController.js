@@ -4,12 +4,20 @@ const mongodb = require("../../mongo_db");
 
 // Display list of all Applicants.
 exports.question_list = async (req, res) => {
-  const questions = await Question.find({});
-  res.status(200).json({
-    success: true,
-    message: "Lista de preguntas obtenida",
-    questions,
+  try {
+	const questions = await Question.find({});
+    res.status(200).json({
+      success: true,
+      message: "Lista de preguntas obtenida",
+      questions,
+    });
+} catch (error) {
+	let message = "Ha ocurrido un error: "+ error;
+  return res.status(400).json({
+    success: false,
+    message: message,
   });
+}
 };
 
 exports.question_create_post = async (req, res) => {
@@ -60,10 +68,10 @@ exports.question_create_post = async (req, res) => {
       });
     }
   } catch (error) {
-    let message = "Ha ocurrido un error: ";
+    let message = "Ha ocurrido un error: " + error;
     return res.status(400).json({
       success: false,
-      message: message + error,
+      message: message,
     });
   }
 };
