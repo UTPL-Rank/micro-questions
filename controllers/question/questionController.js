@@ -1,4 +1,5 @@
 const Question = require("../../models/Question");
+const Answer = require("../../models/Answer");
 
 const mongodb = require("../../mongo_db");
 
@@ -37,6 +38,7 @@ exports.question_create_post = async (req, res) => {
     codigo,
     peso,
     subPreguntas,
+    respuestas
   } = req.body;
   let question = new Question({
     textoPregunta,
@@ -47,7 +49,7 @@ exports.question_create_post = async (req, res) => {
   });
   let validate = false;
   try {
-    subPreguntas.forEach(async (subPregunta) => {
+    subPreguntas?.forEach(async (subPregunta) => {
       if (subPregunta.tipoPregunta != 1 && question.tipoPregunta == 1) {
         let subQuestion = new Question({
           textoPregunta: subPregunta.textoPregunta,
@@ -61,11 +63,22 @@ exports.question_create_post = async (req, res) => {
         const msg = JSON.stringify(subQuestion);
         publishMessage(msg);
       } else {
-        console.log('Parametros de pregunta incorectos');
+        console.log('No se puede agregar una subPregunta a una pregunta de tipo: ', question.tipoPregunta);
         validate = true;
       }
     });
     if (validate != true) {
+      respuestas.forEach(respuesta => {
+        let newRespuesta = new Answer ({
+            textoRespuesta: respuesta.textoRespuesta,
+            imagenRespuesta: respuesta.imagenRespuesta,
+            esCorrecta: respuesta.esCorrecta,
+        })
+        newRespuesta.save();
+        question.respuestas = question.respuestas.concat(newRespuesta._id);
+        const msg = JSON.stringify(newRespuesta);
+        publishMessage(msg);
+      });
       savedQuestion = await question.save();
       const msg = JSON.stringify(question);
       publishMessage(msg);
