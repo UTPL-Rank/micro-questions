@@ -4,7 +4,7 @@ const Answer = require("../../models/Answer");
 const mongodb = require("../../mongo_db");
 
 //Topic PubSub
-const topicName = "hestia-topic";
+const topicName = "hestia";
 
 // Imports the Google Cloud client library
 const { PubSub } = require("@google-cloud/pubsub");
